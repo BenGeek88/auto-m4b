@@ -5,6 +5,7 @@
 
 user_name="autom4b"
 user_id="1001"
+group_id="100"
 
 # Create user if they don't exist
 if ! id -u "${PUID}" &>/dev/null; then
@@ -16,15 +17,18 @@ if ! id -u "${PUID}" &>/dev/null; then
         user_name="${PUID}"
     fi
 
-    adduser \
-        --uid "${user_id}" \
-        "${user_name}"
-    echo "Created missing ${user_name} user with UID ${user_id}"
+    if [[ "${PGID}" =~ ^[0-9]+$ ]]; then
+        user_id="${PGID}"
+     
+    adduser --disabled-password --gecos "" --uid "${user_id}" --gid "${group_id}" "${user_name}" 
+    echo "Created missing ${user_name} user with UID ${user_id} and GID ${group_id}"
+
 fi
 
 cmd_prefix=""
 if [[ -n "${PUID:-}" ]]; then
     cmd_prefix="/sbin/setuser ${user_name}"
+    echo "User set to ${user_name}"
 fi
 
 ${cmd_prefix} /auto-m4b-tool.sh 2> /config/auto-m4b-tool.log
