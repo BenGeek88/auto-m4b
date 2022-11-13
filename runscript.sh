@@ -18,7 +18,8 @@ if ! id -u "${PUID}" &>/dev/null; then
     fi
 
     if [[ "${PGID}" =~ ^[0-9]+$ ]]; then
-        user_id="${PGID}"
+        group_id="${PGID}"
+    fi
      
     adduser --disabled-password --gecos "" --uid "${user_id}" --gid "${group_id}" "${user_name}" 
     echo "Created missing ${user_name} user with UID ${user_id} and GID ${group_id}"
